@@ -1,0 +1,179 @@
+<html>
+    <head>
+        <title>Lockipedia.com - Add record to the Bitcoin powered wiki</title>
+        <meta name="description" content="Add record to the Bitcoin powered wiki">
+        <meta name=”robots” content="index, follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <meta property="og:title" content="Lockipedia.com - Add record to the Bitcoin powered wiki">
+        <meta property="og:image" content="/assets/logo@2x.png">
+
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+        <link rel="manifest" href="/assets/site.webmanifest">
+
+        <link href="/styles/shuallet.css" rel="stylesheet" type="text/css">
+        <script src="/scripts/bsv.browser.min.js"></script>
+        <script src="/scripts/scripts.js"></script>
+        <link href="/styles/styles.css?1" rel="stylesheet">
+
+        <script src="/scripts/quill.min.js"></script>
+        <link href="/styles/quill.snow.css" rel="stylesheet">
+
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+    </head>
+    <body>
+      <div class="container">
+        <div class="top-bar">
+            <span class="home">
+                <span class="spacer"></span>
+                <span class="choice"><a href="/"><strong>HOME</strong></a></span>
+                <span class="major-separator">|</span>
+            </span>
+            <span class="links">
+                <span class="choice"><a href="https://www.hodlocker.com" target="_blank">HODLOCKER</a></span>
+                <span class="minor-separator">·</span>
+                <span class="choice"><a href="https://trends.cash" target="_blank">TRENDS.CASH</a></span>
+                <span class="minor-separator">·</span>
+                <span class="choice"><a href="https://maplocks.com" target="_blank">MAPLOCKS</a></span>
+                <span class="minor-separator">·</span>
+                <span class="choice"><a href="https://lockmarks.com" target="_blank">LOCKMARKS</a></span>
+                <span class="expander"></span>
+            </span>
+            <span class="expander"></span>
+            <span class="options">
+                <span class="spacer"></span>
+                <span class="spacer"></span>
+                <span class="choice">
+                    <a href="/wallet/"><span id="wallet-connect" style="display: block;">Wallet</span></a>
+                </span>
+                <span class="spacer"></span>
+            </span>
+        </div>
+
+        <div class="grid chartGrid">
+            <div class="resultTable">
+              <div class="resultTable-container resultTable-separator">
+                <div class="resultTable-title" id="articleTitle">
+                  Add article
+                </div>
+              </div>
+              <div>
+                <div class="popupForm"><input type="hidden" id="newPostTitle" class="long" placeholder="Title"></div>
+                <div class="popupForm"><input type="hidden" id="newPostLanguage" class="long" placeholder="Language"></div>
+                <div class="tooltip-content popupForm">
+                    <div id="standalone-container">
+                      <div id="toolbar-container">
+                        <span class="ql-formats">
+                          <button class="ql-bold"></button>
+                          <button class="ql-italic"></button>
+                          <button class="ql-header" value="1"></button>
+                          <button class="ql-header" value="2"></button>
+                          <button class="ql-list" value="ordered"></button>
+                          <button class="ql-list" value="bullet"></button>
+                          <button class="ql-link"></button>
+                          <button class="ql-image"></button>
+                          <button class="ql-video"></button>
+                        </span>
+                      </div>
+                      <div id="editor-container" style="min-height: 400px;"></div>
+                    </div>
+                </div>
+
+                <div class="popupForm">
+                    <button id="newPostButton" onclick="addPost()">Add</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+      </div>
+
+    <script src="/scripts/shuallet.bundle.js"></script>
+    </body>
+</html>
+
+<script language='javascript'>
+    const addPost = async() => {
+        if (!localStorage.walletAddress) {
+            alert("You must have a wallet to add posts")
+            window.location.href = '/wallet/';
+        }
+        var name = document.getElementById('newPostTitle').value;
+        if (!name) {
+            alert(`Title field is required`);
+            return;
+        }
+        var language = document.getElementById('newPostLanguage').value;
+        var description = document.getElementById('newPostContent').value;
+        document.getElementById("newPostButton").disabled = true;
+
+        const currentHeight = await getBlock();
+        let lockHeight = parseInt(currentHeight) + 144*365*100;
+        let satoshis = 1;
+        let content = `[${language}] [${name}] ${description}`;
+
+        let rawtx = lockPost(localStorage.walletAddress, lockHeight, satoshis, null, content, null);
+        if (rawtx) {
+            const c = 1;
+            if (c) {
+                rawtx = await payForRawTx(rawtx)
+                const t = await broadcast(rawtx, true, localStorage.walletAddress);
+                if (t.length === 64) {
+                    addTx({'txid': t, 'height': lockHeight, 'satoshis': satoshis})
+                    alert(`Name added: ${t}`);
+
+                    document.getElementById('newPostTitle').value = ""
+                    document.getElementById('newPostLanguage').value = ""
+                    document.getElementById('newPostContent').value = ""
+                    document.getElementById("newPostButton").disabled = false;
+                } else {
+                    alert(t)
+                    document.getElementById("newPostButton").disabled = false;
+                }
+            } else { 
+                document.getElementById("newPostButton").disabled = false;
+                return
+            }
+        } else {
+            document.getElementById("newPostButton").disabled = false;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        if (getUrlVars()["language"]) {
+            var language = decodeURIComponent(getUrlVars()["language"])
+            document.getElementById('newPostLanguage').value = language
+        }
+        if (getUrlVars()["title"]) {
+            var title = decodeURIComponent(getUrlVars()["title"])
+            document.getElementById('newPostTitle').value = title
+            document.getElementById('articleTitle').innerHTML = "Article: " + title
+        }
+
+        Quill.register("modules/imageCompressor", imageCompressor);
+        var quill = new Quill('#editor-container', {
+            modules: {
+              syntax: false,
+              toolbar: '#toolbar-container',
+              imageCompressor: {
+                quality: 0.9,
+                maxWidth: 600, // default
+                minHeight: 400, // default
+                maxHeight: 800, // default
+                imageType: 'image/jpeg',
+                keepImageTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/avif']
+              }
+            },
+            placeholder: '',
+            theme: 'snow'
+        });
+        if(!localStorage.getItem('disclaimerShown')) {
+            alert("Disclaimer\n\nPlease be reminded that we accept no responsibility for any financial losses occurred to users as a result of using this app. Use at your own risk.")
+            localStorage.setItem('disclaimerShown', 1)
+        }
+    })
+</script>
