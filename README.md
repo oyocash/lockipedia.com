@@ -1,2 +1,0 @@
-# lockipedia.com
-lockipedia frontend

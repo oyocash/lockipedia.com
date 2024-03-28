@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
         <meta property="og:title" content="Lockipedia.com - Add record to the Bitcoin powered wiki">
-        <meta property="og:image" content="/assets/logo@2x.png">
+        <meta property="og:image" content="/assets/logo.png">
 
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
@@ -54,6 +54,12 @@
             </span>
         </div>
 
+        <div class="content">
+          <form method="get" action="/search">
+            <input type="text" name="q" autofocus="" autocomplete="off" value="" placeholder="Search..." onfocus="this.setSelectionRange(this.value.length,this.value.length);">
+          </form>
+        </div>
+
         <div class="grid chartGrid">
             <div class="resultTable">
               <div class="resultTable-container resultTable-separator">
@@ -92,7 +98,7 @@
 
       </div>
 
-    <script src="/scripts/shuallet.bundle.js"></script>
+    <script src="/scripts/shuallet.bundle.js?2"></script>
     </body>
 </html>
 
@@ -107,8 +113,9 @@
             alert(`Title field is required`);
             return;
         }
+        name = name.trimStart();
         var language = document.getElementById('newPostLanguage').value;
-        var description = document.getElementById('newPostContent').value;
+        var description = document.querySelector(".ql-editor").innerHTML;
         document.getElementById("newPostButton").disabled = true;
 
         const currentHeight = await getBlock();
@@ -124,11 +131,11 @@
                 const t = await broadcast(rawtx, true, localStorage.walletAddress);
                 if (t.length === 64) {
                     addTx({'txid': t, 'height': lockHeight, 'satoshis': satoshis})
-                    alert(`Name added: ${t}`);
+                    alert(`Record added: ${t}`);
 
                     document.getElementById('newPostTitle').value = ""
                     document.getElementById('newPostLanguage').value = ""
-                    document.getElementById('newPostContent').value = ""
+                    document.querySelector(".ql-editor").innerHTML = ""
                     document.getElementById("newPostButton").disabled = false;
                 } else {
                     alert(t)

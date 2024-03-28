@@ -1,12 +1,12 @@
 <html>
     <head>
-        <title>Lockipedia.com - The real wiki.  Powered by Bitcoin</title>
-        <meta name="description" content="The real wiki.  Powered by Bitcoin">
+        <title>Lockipedia.com - 404 error</title>
+        <meta name="description" content="404 error.  Page not found">
         <meta name=”robots” content="index, follow">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
-        <meta property="og:title" content="Lockipedia.com - The real wiki.  Powered by Bitcoin">
-        <meta property="og:image" content="/assets/logo.png">
+        <meta property="og:title" content="Lockipedia.com - Search into the real wiki, powered by Bitcoin">
+        <meta property="og:image" content="/assets/logo@2x.png">
 
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
@@ -45,17 +45,20 @@
                 <span class="spacer"></span>
                 <span class="spacer"></span>
                 <span class="choice">
-                    <a href="/wallet/"><span id="wallet-connect" style="display: block;">Wallet</span></a>
+                    <a id="wallet-connect" href="/wallet/">Wallet</a>
                 </span>
                 <span class="spacer"></span>
             </span>
         </div>
 
         <div class="content">
-            <pre>Lockipedia</pre>
-            <form method="get" action="/search">
-              <input type="text" name="q" autofocus="" autocomplete="off" placeholder="Search...">
-            </form>
+          <form method="get" action="/search">
+            <input type="text" name="q" autofocus="" autocomplete="off" value="" placeholder="Search..." onfocus="this.setSelectionRange(this.value.length,this.value.length);">
+          </form>
+          <span class="total_results" id="categoryTitle"></span>
+          <div class="tab-row"></div>
+          <div class="tab-base"></div>
+          <div id="postsHTML">Page not found</div>
         </div>
 
       </div>
@@ -63,12 +66,3 @@
     <script src="/scripts/shuallet.bundle.js"></script>
     </body>
 </html>
-
-<script language='javascript'>
-    document.addEventListener("DOMContentLoaded", function() {
-        if(!localStorage.getItem('disclaimerShown')) {
-            alert("Disclaimer\n\nPlease be reminded that we accept no responsibility for any financial losses occurred to users as a result of using this app. Use at your own risk.")
-            localStorage.setItem('disclaimerShown', 1)
-        }
-    })
-</script>

@@ -191,6 +191,10 @@ margin: 15px 0;
 overflow: hidden;
 }
 
+.post-long {
+max-height: none;
+}
+
 .post .header {
 margin-bottom: 4px;
 }
