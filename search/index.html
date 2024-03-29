@@ -133,6 +133,8 @@
             return
         }
 
+        postsHTML = `<p>Don't like the results? <a href="/add/?title=${encodeURIComponent(search)}&language=${language}">Write your own article</a><br><br></p>`
+
         for (let i = 0; i < posts.length; i++) {
             const [beforeDot, afterDot] = String(posts[i].satoshis / 100000000).split('.');
             if (afterDot) {
