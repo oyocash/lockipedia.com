@@ -18,6 +18,8 @@
         <script src="/scripts/scripts.js"></script>
         <link href="/styles/styles.css?10" rel="stylesheet">
 
+        <script src="/scripts/purify.min.js"></script>
+
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
@@ -141,6 +143,9 @@
                 posts[i].bsv = parseFloat(beforeDot)
             }
             if (posts[i].content === null || posts[i].content === undefined) posts[i].content = "";
+
+            posts[i].content = DOMPurify.sanitize(posts[i].content)
+            posts[i].content = posts[i].content.replace('<img', '<img style="max-width:98%"')
 
             postsHTML += `<div class="post post-long">
             <div class="header2">
