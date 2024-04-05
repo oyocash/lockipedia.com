@@ -160,6 +160,8 @@
             var title = decodeURIComponent(getUrlVars()["title"])
             document.getElementById('newPostTitle').value = title
             document.getElementById('articleTitle').innerHTML = "Article: " + title
+        } else {
+            document.getElementById('newPostTitle').type = "text"
         }
 
         Quill.register("modules/imageCompressor", imageCompressor);

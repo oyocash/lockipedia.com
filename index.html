@@ -16,7 +16,7 @@
         <link href="/styles/shuallet.css" rel="stylesheet" type="text/css">
         <script src="/scripts/bsv.browser.min.js"></script>
         <script src="/scripts/scripts.js"></script>
-        <link href="/styles/styles.css?9" rel="stylesheet">
+        <link href="/styles/styles.css?11" rel="stylesheet">
 
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
@@ -53,18 +53,28 @@
 
         <div class="content">
             <pre>Lockipedia</pre>
-            <form method="get" action="/search">
-              <input type="text" name="q" autofocus="" autocomplete="off" placeholder="Search...">
+            <form method="get" action="/search?language=English">
+              <input id="searchQuery" type="text" name="q" autofocus="" autocomplete="off" placeholder="Search...">
             </form>
+            <button onclick="makeSearch()">Search</button>
+            <a href="/add/?language=English"><button>Add article</button></a>
         </div>
 
       </div>
-
+      
     <script src="/scripts/shuallet.bundle.js"></script>
     </body>
 </html>
 
 <script language='javascript'>
+    const makeSearch = () => {
+        let content = document.getElementById('searchQuery').value;
+        if (!content) {
+            return;
+        }
+        window.location.href = '/search?language=English&q=' + content;
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         if(!localStorage.getItem('disclaimerShown')) {
             alert("Disclaimer\n\nPlease be reminded that we accept no responsibility for any financial losses occurred to users as a result of using this app. Use at your own risk.")
